@@ -1,4 +1,4 @@
-#amqps://zszhwtqp:ohfKwa2VU1nyRmV8BXTPvy_wld7oDQD9@shrimp.rmq.cloudamqp.com/zszhwtqp
+#amqps://vmsvqzzo:BYr7CpyY2QS-0pUusXMHpWuPe1pyOyXQ@octopus.rmq3.cloudamqp.com/vmsvqzzo
 import pika,json
 
 #import os
@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 from .main1.products.models import Products
 
 
-params = pika.URLParameters('amqps://zszhwtqp:ohfKwa2VU1nyRmV8BXTPvy_wld7oDQD9@shrimp.rmq.cloudamqp.com/zszhwtqp')
+params = pika.URLParameters('amqps://vmsvqzzo:BYr7CpyY2QS-0pUusXMHpWuPe1pyOyXQ@octopus.rmq3.cloudamqp.com/vmsvqzzo')
 
 connection = pika.BlockingConnection(params)
 
@@ -37,13 +37,20 @@ def callback(ch,method, properties, body):
         product.image = data['image']
         product.save()
 
-    elif properties['content_type'] == 'product_deleted':
-        try:
-            product = Products.objects.get(id=data['id'])
-            product.delete()
-        except Products.DoesNotExist:
-        # Handle the case where the product does not exist
-            pass  
+    elif properties.content_type == 'product_deleted':
+        if isinstance(data, dict):
+            product_id = data.get('id')
+            if product_id is not None:
+                try:
+                    product = Product.objects.get(id=product_id)
+                    product.delete()
+                    print('Product deleted')
+                except Product.DoesNotExist as e:
+                    print(f"Error: Product with ID {product_id} does not exist. {e}")
+            else:
+                print("Error: 'id' key not found in data or is None")
+        else:
+            print("Error: Invalid data format, expected a dictionary")
 
 channel.basic_consume(queue='main1', on_message_callback=callback, auto_ack=True)
 

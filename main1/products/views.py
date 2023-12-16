@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Product,User
+from .producer import publish
 from .serializers import ProductSerializer
 import random 
 
@@ -26,6 +27,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer = ProductSerializer(instance=product, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        publish('product_updated', serializer.data)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, pk=None): # /api/product/<str:id>

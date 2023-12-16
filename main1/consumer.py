@@ -11,7 +11,7 @@ django.setup()
 
 from products.models import Product
 
-params = pika.URLParameters('amqps://zszhwtqp:ohfKwa2VU1nyRmV8BXTPvy_wld7oDQD9@shrimp.rmq.cloudamqp.com/zszhwtqp')
+params = pika.URLParameters('amqps://vmsvqzzo:BYr7CpyY2QS-0pUusXMHpWuPe1pyOyXQ@octopus.rmq3.cloudamqp.com/vmsvqzzo')
 
 connection = pika.BlockingConnection(params)
 
@@ -22,7 +22,7 @@ channel.queue_declare(queue='main1')
 def callback(ch, method, properties, body):
     print('Received in main1')
     data = json.loads(body.decode('utf-8'))  # Ensure the body is loaded as a dictionary
-    print(data)
+    print("data---->",data)
 
     if properties.content_type == 'product_created':
         product = Product(id=data['id'], title=data['title'], image=data['image'])
@@ -38,18 +38,23 @@ def callback(ch, method, properties, body):
         print('Product updated')
 
     elif properties.content_type == 'product_deleted':
-        if isinstance(data, dict):
-            product_id = data.get('id')
-            if product_id is not None:
-                try:
-                    product = Product.objects.get(id=product_id)
-                    product.delete()
-                    print('Product deleted')
-                except Product.DoesNotExist as e:
-                    print(f"Error: Product with ID {product_id} does not exist. {e}")
-            else:
-                print("Error: 'id' key not found in data or is None")
-        else:
+        product = Product.objects.get(id=data['id'])
+        product.delete()
+        print('Product deleted')
+       
+        # if isinstance(data, dict):
+        #     product_id = data.get('id')
+        #     if product_id is not None:
+        #         try:
+        #             product = Product.objects.get(id=product_id)
+        #             product.delete()
+        #             print('Product deleted')
+        #         except Product.DoesNotExist as e:
+        #             print(f"Error: Product with ID {product_id} does not exist. {e}")
+        #     else:
+        #         print("Error: 'id' key not found in data or is None")
+        # else:
+            print("data---->",data)
             print("Error: Invalid data format, expected a dictionary")
 
             
