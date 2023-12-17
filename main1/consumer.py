@@ -38,25 +38,24 @@ def callback(ch, method, properties, body):
         print('Product updated')
 
     elif properties.content_type == 'product_deleted':
-        product = Product.objects.get(id=data['id'])
-        product.delete()
-        print('Product deleted')
-       
-        # if isinstance(data, dict):
-        #     product_id = data.get('id')
-        #     if product_id is not None:
-        #         try:
-        #             product = Product.objects.get(id=product_id)
-        #             product.delete()
-        #             print('Product deleted')
-        #         except Product.DoesNotExist as e:
-        #             print(f"Error: Product with ID {product_id} does not exist. {e}")
-        #     else:
-        #         print("Error: 'id' key not found in data or is None")
-        # else:
-            print("data---->",data)
-            print("Error: Invalid data format, expected a dictionary")
-
+          product = Product.objects.get(id=data)
+          product.delete()
+          print('Product deleted')
+    #   print(f"Data received: {data}")
+    #   if isinstance(data, int):
+    #     product_id = data.get('id')
+    #     if product_id is not None:
+    #         try:
+    #             product = Product.objects.get(id=product_id)
+    #             product.delete()
+    #             print('Product deleted')
+    #         except Product.DoesNotExist as e:
+    #             raise ValueError(f"Error: Product with ID {product_id} does not exist. {e}")
+    #     else:
+    #         raise ValueError("Error: 'id' key not found in data or is None")
+    # else:
+    #         print(f"Data received: {data}")
+    #         raise ValueError("Error: Invalid data format, expected a dictionary")
             
 
 channel.basic_consume(queue='main1', on_message_callback=callback, auto_ack=True)
