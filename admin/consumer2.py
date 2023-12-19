@@ -21,7 +21,7 @@ connection = pika.BlockingConnection(params)
 
 channel = connection.channel()
 
-channel.queue_declare(queue='admin')
+channel.queue_declare(queue='temp')
 
 def callback(ch,method, properties, body):
     print('Received in admin')
@@ -58,7 +58,7 @@ def callback(ch,method, properties, body):
 
 
 
-channel.basic_consume(queue='admin', on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue='temp', on_message_callback=callback, auto_ack=True)
 
 print('Started Consuming')
 

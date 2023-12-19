@@ -45,7 +45,7 @@ def callback(ch, method, properties, body):
           product = Product.objects.get(id=data['id'])
           product.title = data['title']
           product.image = data['image']
-          product.likes = data['likes']
+        #   product.likes = data['likes']
           product.save()
           print('Product updated')
           break
