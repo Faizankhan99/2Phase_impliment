@@ -1,12 +1,12 @@
-version: '3.8'
+version: "3.8"
 services:
   backend:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
-    ports: 
-      - 8000:8000
+    command: python manage.py runserver 0.0.0.0:8003
+    ports:
+      - 8003:8003
     volumes:
       - .:/app
     depends_on:
@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: 'python consumer.py'
+    command: "python consumer.py"
     depends_on:
       - db
 
@@ -32,4 +32,3 @@ services:
       - .dbdata:/var/lib/mysql
     ports:
       - 33066:3306
-

@@ -2,13 +2,13 @@
 
 import pika, json ,requests
 
-MAIN_MICROSERVICE_URL = "http://localhost:8002/api/products" 
+MAIN_MICROSERVICE_URL = "http://docker.for.win.localhost:8002/api/products" 
 
 
 def is_main_microservice_active():
     try:
         print('response-->')
-        response = requests.get(MAIN_MICROSERVICE_URL)
+        response = requests.get('https://www.google.com/')
         print('response-->',response)
         if(response.status_code == 200):
          return True
