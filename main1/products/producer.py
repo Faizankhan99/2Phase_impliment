@@ -8,7 +8,7 @@ MAIN_MICROSERVICE_URL = "http://docker.for.win.localhost:8000/api/product"
 def is_main_microservice_active():
     try:
         print('response-->')
-        response = requests.get('http://192.168.140.232:8003/api/test')
+        response = requests.get('http://192.168.135.232:8003/api/test')
         print('response-->',response)
         if(response.status_code == 200):
             print("Krishna")
@@ -20,6 +20,8 @@ def is_main_microservice_active():
 
         # In-memory storage for temporary data
 temporary_storage = []
+print("temporary_storage-->",temporary_storage)
+
 
 params = pika.URLParameters('amqps://vmsvqzzo:BYr7CpyY2QS-0pUusXMHpWuPe1pyOyXQ@octopus.rmq3.cloudamqp.com/vmsvqzzo')
 
@@ -44,3 +46,5 @@ def publish(method, body):
     # properties = pika.BasicProperties(method) 
     # print('properties----->',properties)
     # channel.basic_publish(exchange='',routing_key='admin', body=json.dumps(body), properties=properties)
+     
+

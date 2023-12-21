@@ -4,6 +4,9 @@ import pika, json ,requests
 
 MAIN_MICROSERVICE_URL = "http://docker.for.win.localhost:8002/api/products" 
 
+# In-memory storage for temporary data
+temporary_storage = []
+
 
 def is_main_microservice_active():
     try:
@@ -16,11 +19,19 @@ def is_main_microservice_active():
         print(f'response-->',e)
         return False
 
-        # In-memory storage for temporary data
-temporary_storage = []
 
+def is_main_active():
+  try:
+        print('response-->')
+        response = requests.get('http://192.168.135.232:8002/api/products')
+        print('response-->',response)
+        if(response.status_code == 200):
+            pass
+  except requests.RequestException as e:
+        print(f'response-->',e)
+        return False
 
-
+ 
 params = pika.URLParameters('amqps://vmsvqzzo:BYr7CpyY2QS-0pUusXMHpWuPe1pyOyXQ@octopus.rmq3.cloudamqp.com/vmsvqzzo')
 
 connection = pika.BlockingConnection(params)
