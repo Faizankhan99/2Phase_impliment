@@ -38,8 +38,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         validated_data = serializer.validated_data
         # validated_data['id'] = pk 
         temporary_storage.append(validated_data)
-        print("validated_data -->",validated_data )
-        publish('product_updated', validated_data)
+        # print("validated_data -->",validated_data )
+        # publish('product_updated', validated_data)
         if publish('product_updated', validated_data):
          serializer.save()
          return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -57,9 +57,8 @@ class ProductViewSet(viewsets.ModelViewSet):
         validated_data = serializer.validated_data
         validated_data['id'] = pk 
         temporary_storage.append(validated_data)
-
-        print("validated_data -->",validated_data )
-        publish('product_updated', validated_data)
+        # print("validated_data -->",validated_data )
+        # publish('product_updated', validated_data)
         if publish('product_updated', validated_data):
          serializer.save()
 
@@ -68,7 +67,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     def destroy(self, request, pk=None): # /api/product/<str:id>
         product = Product.objects.get(id=pk)
         product.delete()
-        publish('product_deleted', pk)
+        if publish('product_deleted', pk):
+           publish('product_deleted', pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     

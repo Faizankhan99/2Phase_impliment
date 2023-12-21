@@ -37,9 +37,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         validated_data = serializer.validated_data
         validated_data['id'] = pk 
         temporary_storage.append(validated_data)
-
-        print("validated_data -->",validated_data )
-        publish('product_updated', validated_data)
+        # publish('product_updated', validated_data)
         if publish('product_updated', validated_data):
          serializer.save()
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)

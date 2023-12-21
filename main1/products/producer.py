@@ -8,13 +8,15 @@ MAIN_MICROSERVICE_URL = "http://docker.for.win.localhost:8000/api/product"
 def is_main_microservice_active():
     try:
         print('response-->')
-        response = requests.get("http://docker.for.win.localhost:8003/api/product")
+        response = requests.get('http://192.168.140.232:8003/api/test')
         print('response-->',response)
         if(response.status_code == 200):
-         return True
+            print("Krishna")
+            return True
     except requests.RequestException as e:
-        print(f'responsee-->',e)
+        print(f'response-->',e)
         return False
+    
 
         # In-memory storage for temporary data
 temporary_storage = []
@@ -26,8 +28,7 @@ connection = pika.BlockingConnection(params)
 channel = connection.channel()
 
 def publish(method, body):
-      print("method, body----->",is_main_microservice_active())
-      if (is_main_microservice_active()== True):
+      if is_main_microservice_active():
         # Main microservice is active, publish the message
         print("method, body----->", method, body)
         properties = pika.BasicProperties(method) 
