@@ -8,7 +8,7 @@ MAIN_MICROSERVICE_URL = "http://docker.for.win.localhost:8000/api/product"
 def is_main_microservice_active():
     try:
         print('response-->')
-        response = requests.get('http://192.168.135.232:8003/api/test')
+        response = requests.get('http://192.168.29.45:8003/api/test')
         print('response-->',response)
         if(response.status_code == 200):
             print("Krishna")

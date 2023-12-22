@@ -11,7 +11,7 @@ temporary_storage = []
 def is_main_microservice_active():
     try:
         print('response-->')
-        response = requests.get('http://192.168.140.232:8002/api/products')
+        response = requests.get('http://192.168.29.45:8002/api/products')
         print('response-->',response)
         if(response.status_code == 200):
          return True
@@ -20,16 +20,16 @@ def is_main_microservice_active():
         return False
 
 
-def is_main_active():
-  try:
-        print('response-->')
-        response = requests.get('http://192.168.135.232:8002/api/products')
-        print('response-->',response)
-        if(response.status_code == 200):
-            pass
-  except requests.RequestException as e:
-        print(f'response-->',e)
-        return False
+# def is_main_active():
+#   try:
+#         print('response-->')
+#         response = requests.get('http:// 192.168.29.45:8002/api/products')
+#         print('response-->',response)
+#         if(response.status_code == 200):
+#             pass
+#   except requests.RequestException as e:
+#         print(f'response-->',e)
+#         return False
 
  
 params = pika.URLParameters('amqps://vmsvqzzo:BYr7CpyY2QS-0pUusXMHpWuPe1pyOyXQ@octopus.rmq3.cloudamqp.com/vmsvqzzo')

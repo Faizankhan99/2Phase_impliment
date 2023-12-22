@@ -43,6 +43,7 @@ def callback(ch, method, properties, body):
 
          if properties.content_type == 'product_updated':
           product = Product.objects.get(id=data['id'])
+          print("product---->",product)
           product.title = data['title']
           product.image = data['image']
         #   product.likes = data['likes']

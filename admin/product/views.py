@@ -19,7 +19,7 @@ temporary_storage=[]
 def is_main_microservice_active():
     try:
         print('response of main-->')
-        response = requests.get('http://192.168.135.232:8002/api/test')
+        response = requests.get('http://192.168.29.45:8002/api/products')
         print('response of main-->',response)
         if(response.status_code == 200):
             print("Krishna")
@@ -32,26 +32,32 @@ def is_main_microservice_active():
 
 
 
-def check_admin_active(content,self, request, pk):
+def check_admin_active(content,self, request, pk=None):
     retry_count = 0
     max_retries = 3
     while retry_count < max_retries:
           try:
              if temporary_storage:
                  if is_main_microservice_active():
+                  print("Hello")
                   if(content == "product_created"):
                        serializer = ProductSerializer(data=request.data)
                        serializer.is_valid(raise_exception=True)
                        serializer.save()
+                       print("serializer.data----->",serializer.data)
                        publish('product_created', serializer.data)
-                  else:     
-                   product = Product.objects.get(id=pk)
-                   print("Product-->",product)
-                   serializer = ProductSerializer(instance=product, data=request.data)
-                   print("Product-->",serializer)
-                   serializer.is_valid(raise_exception=True)
-                   serializer.save()
-                   publish(content, serializer.data)
+                  elif(content == "product_deleted"):
+                       product = Product.objects.get(id=pk)
+                       product.delete()
+                       publish('product_deleted', pk)
+                  else:    
+                     product = Product.objects.get(id=pk)
+                     print("Product-->",product)
+                     serializer = ProductSerializer(instance=product, data=request.data)
+                     print("Product-->",serializer)
+                     serializer.is_valid(raise_exception=True)
+                     serializer.save()
+                     publish(content, serializer.data)
                   break
           except OperationalError as e:
             print(f"Database connection error: {e}")
@@ -90,16 +96,14 @@ class ProductViewSet(viewsets.ModelViewSet):
     def create(self, request): # /api/product
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-           # Store validated data before calling save
-        validated_data = serializer.validated_data
-        # validated_data['id'] = pk 
-        temporary_storage.append(validated_data)
-        if publish('product_created', validated_data):
-         serializer.save()
+        if is_main_microservice_active():
+           serializer.save() 
+           print("serializer-->",serializer)
+           publish('product_created', serializer.data)
         else:
-            temporary_storage.append(validated_data)
-            check_admin_active("product_created",self, request)
+            temporary_storage.append(serializer.data)
             print("temporary_storage--->",temporary_storage)
+            check_admin_active("product_created",self, request)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def retrieve(self, request, pk=None): # /api/product/<str:id>
@@ -115,7 +119,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         validated_data = serializer.validated_data
         validated_data['id'] = pk 
         temporary_storage.append(validated_data)
-        # print("validated_data -->",validated_data )
+        print("validated_data -->",validated_data )
         # publish('product_updated', validated_data)
         if publish('product_updated', validated_data):
          serializer.save()
@@ -127,8 +131,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, pk=None): # /api/product/<str:id>
         product = Product.objects.get(id=pk)
-        product.delete()
         if publish('product_deleted', pk):
+           product.delete()
            publish('product_deleted', pk)
         else:
             temporary_storage.append(pk)
