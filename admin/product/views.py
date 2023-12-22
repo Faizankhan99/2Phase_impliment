@@ -19,7 +19,7 @@ temporary_storage=[]
 def is_main_microservice_active():
     try:
         print('response of main-->')
-        response = requests.get('http://192.168.29.45:8002/api/products')
+        response = requests.get('http://192.168.135.232:8002/api/products')
         print('response of main-->',response)
         if(response.status_code == 200):
             print("Krishna")
@@ -133,7 +133,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         product = Product.objects.get(id=pk)
         if publish('product_deleted', pk):
            product.delete()
-           publish('product_deleted', pk)
+        #    publish('product_deleted', pk)
         else:
             temporary_storage.append(pk)
             check_admin_active('product_deleted',self, request, pk)

@@ -11,7 +11,7 @@ temporary_storage = []
 def is_main_microservice_active():
     try:
         print('response-->')
-        response = requests.get('http://192.168.29.45:8002/api/products')
+        response = requests.get('http://192.168.135.232:8002/api/products')
         print('response-->',response)
         if(response.status_code == 200):
          return True
@@ -23,7 +23,7 @@ def is_main_microservice_active():
 # def is_main_active():
 #   try:
 #         print('response-->')
-#         response = requests.get('http:// 192.168.29.45:8002/api/products')
+#         response = requests.get('http:// 192.168.135.232:8002/api/products')
 #         print('response-->',response)
 #         if(response.status_code == 200):
 #             pass

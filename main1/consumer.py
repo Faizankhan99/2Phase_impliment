@@ -50,14 +50,13 @@ def callback(ch, method, properties, body):
           product.save()
           print('Product updated')
           break
-         
          elif properties.content_type == 'product_deleted':
+          print("Hello")
           product = Product.objects.get(id=data)
           product.delete()
           print('Product deleted')
           print("Successfully connected to the database and processed the data.")
           break
-       
         except OperationalError as e:
             print(f"Database connection error: {e}")
             print(f"Retrying ({retry_count + 1}/{max_retries})...")
